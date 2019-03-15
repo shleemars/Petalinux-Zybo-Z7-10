@@ -1,7 +1,7 @@
 FROM		ubuntu:16.04
 MAINTAINER	shlee.mars@gmail.com
 
-#build with docker build --build-arg --build-arg PETALINUX_INSTALLER=petalinux-v2017.4-final-installer.run -t petalinux
+#build with docker build --build-arg PETALINUX_INSTALLER=petalinux-v2017.4-final-installer.run -t petalinux
 
 ARG PETALINUX_INSTALLER
 
@@ -24,23 +24,22 @@ RUN adduser --disabled-password --gecos '' vivado && \
     usermod -aG sudo vivado && \
     echo "vivado ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# create directory /opt/pkg
+RUN mkdir -p /opt/pkg && \
+    chown vivado /opt/pkg
 
+# create vivado account
 USER vivado
 ENV HOME /home/vivado
 ENV LANG en_US.UTF-8
-
-COPY accept-eula.sh ${PETALINUX_INSTALLER} /
-
-RUN sudo mkdir -p /opt/pkg/petalinux && \
-    sudo chmod 777 /tmp /opt/pkg/petalinux && \
-    sudo chown vivado /tmp /opt/pkg/petalinux && \
-    cd /tmp && \
-    /accept-eula.sh /${PETALINUX_INSTALLER} /opt/pkg/petalinux && \
-    sudo rm -f /${PETALINUX_INSTALLER} /accept-eula.sh
-
-ENV mkdir /home/vivado
 WORKDIR /home/vivado
 
-ADD https://github.com/Digilent/Petalinux-Zybo-Z7-10/releases/download/v2017.4-1/Petalinux-Zybo-Z7-10-2017.4-1.bsp
-
+# install petalinux
+COPY --chown=vivado:vivado accept-eula.sh .
+COPY --chown=vivado:vivado ${PETALINUX_INSTALLER} .
+RUN accept-eula.sh ${PETALINUX_INSTALLER} /opt/pkg/petalinux
 RUN echo "source /opt/pkg/petalinux/settings.sh" >> /home/vivado/.bashrc
+RUN rm -rf accept-eula.sh ${PETALINUX_INSTALLER}
+
+# copy Zybo-Z7-10 BSP
+ADD https://github.com/Digilent/Petalinux-Zybo-Z7-10/releases/download/v2017.4-1/Petalinux-Zybo-Z7-10-2017.4-1.bsp /home/vivado
