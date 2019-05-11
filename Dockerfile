@@ -12,9 +12,9 @@ RUN sed -i 's/archive.ubuntu.com/kr.archive.ubuntu.com/g' /etc/apt/sources.list 
     
 # package update
 RUN apt-get -y update && \
-    apt-get -y install build-essential sudo expect emacs && \
-    apt-get -y install gcc gawk diffstat xvfb chrpath socat xterm autoconf libtool libtool-bin python git net-tools zlib1g-dev libncurses5-dev libssl-dev xz-utils locales wget tftpd cpio gcc-multilib tofrodos iproute gnupg flex bison 
-
+    apt-get -y install build-essential sudo expect emacs openssh-server && \
+    apt-get -y install gcc gawk diffstat xvfb chrpath socat xterm autoconf libtool libtool-bin python git net-tools zlib1g-dev libncurses5-dev libssl-dev xz-utils locales wget tftpd cpio gcc-multilib tofrodos iproute gnupg flex bison
+    
 # locale update
 RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8
