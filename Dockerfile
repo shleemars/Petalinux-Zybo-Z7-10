@@ -35,9 +35,11 @@ ENV LANG en_US.UTF-8
 WORKDIR /home/vivado
 
 # install petalinux
-COPY --chown=vivado:vivado accept-eula.sh .
-COPY --chown=vivado:vivado ${PETALINUX_INSTALLER} .
-RUN accept-eula.sh ${PETALINUX_INSTALLER} /opt/pkg/petalinux
+COPY --chown=vivado:vivado accept-eula.sh /home/vivado/accept-eula.sh
+COPY --chown=vivado:vivado ${PETALINUX_INSTALLER} /home/vivado/${PETALINUX_INSTALLER}
+RUN chmod +x /home/vivado/accept-eula.sh
+RUN chmod +x /home/vivado/${PETALINUX_INSTALLER}
+RUN /home/vivado/accept-eula.sh /home/vivado/${PETALINUX_INSTALLER} /opt/pkg/petalinux
 RUN echo "source /opt/pkg/petalinux/settings.sh" >> /home/vivado/.bashrc
 RUN rm -rf accept-eula.sh ${PETALINUX_INSTALLER}
 
