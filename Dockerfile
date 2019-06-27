@@ -1,6 +1,9 @@
 FROM		ubuntu:16.04
 MAINTAINER	shlee.mars@gmail.com
 
+# Fix Bug: https://github.com/moby/moby/issues/30207
+RUN apt-get update -o Acquire::CompressionTypes::Order::=gz
+
 #build with docker build --build-arg PETALINUX_INSTALLER=petalinux-v2017.4-final-installer.run -t petalinux
 
 ARG PETALINUX_INSTALLER
