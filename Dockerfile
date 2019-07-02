@@ -1,10 +1,10 @@
 FROM		ubuntu:16.04
 MAINTAINER	shlee.mars@gmail.com
-
-# Fix Bug: https://github.com/moby/moby/issues/30207
-RUN apt-get update -o Acquire::CompressionTypes::Order::=gz
+LABEL 		authors="shlee.mars@gmail.com, gcccompil3r@gmail.com"
 
 #build with docker build --build-arg PETALINUX_INSTALLER=petalinux-v2017.4-final-installer.run -t petalinux
+
+#RUN apt-get update -o Acquire::CompressionTypes::Order::=gz
 
 ARG PETALINUX_INSTALLER
 
@@ -12,12 +12,17 @@ ARG PETALINUX_INSTALLER
 RUN sed -i 's/archive.ubuntu.com/kr.archive.ubuntu.com/g' /etc/apt/sources.list && \
     cat /etc/apt/sources.list && \
     dpkg --add-architecture i386
-    
+   
+# Issue - https://forums.xilinx.com/t5/Embedded-Linux/petaconfig-c-kernel-error/td-p/764606
+# Issue - https://forums.xilinx.com/t5/Embedded-Linux/Petalinux-2017-4-docker-container/td-p/825802
+# Issue - If you wanna need some edit then you need editing tools like vim
 # package update
 RUN apt-get -y update && \
     apt-get -y install build-essential sudo expect emacs openssh-server && \
-    apt-get -y install gcc gawk diffstat xvfb chrpath socat xterm autoconf libtool libtool-bin python git net-tools zlib1g-dev libncurses5-dev libssl-dev xz-utils locales wget tftpd cpio gcc-multilib tofrodos iproute gnupg flex bison
-    
+    apt-get -y install gcc gawk diffstat xvfb chrpath socat xterm autoconf libtool libtool-bin python git net-tools zlib1g-dev libncurses5-dev libssl-dev xz-utils locales wget tftpd cpio gcc-multilib tofrodos iproute gnupg flex bison unzip
+
+RUN apt-get -y install texinfo libsdl1.2-dev libglib2.0-dev zlib1g:i386 screen lsb-release vim
+
 # locale update
 RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8
