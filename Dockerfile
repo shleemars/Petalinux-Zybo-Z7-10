@@ -23,6 +23,9 @@ RUN apt-get -y update && \
 
 RUN apt-get -y install texinfo libsdl1.2-dev libglib2.0-dev zlib1g:i386 screen lsb-release vim
 
+# There are libgtk Issue
+RUN apt-get -y install libgtk2.0-dev
+
 # locale update
 RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8
